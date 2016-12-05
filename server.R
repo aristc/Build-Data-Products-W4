@@ -3,7 +3,7 @@ library(ggplot2)
 library(dplyr)
 library(plotly)
 
-delays<-read.csv("sncf-retards-idf.csv")
+delays<-read.csv("./data/sncf-retards-idf.csv",header=TRUE,stringsAsFactors =TRUE,fileEncoding="latin1")
 names(delays)[4]<-c("Line")
 names(delays)[6]<- c("Punctuality")
 names(delays)[7]<-c("Ontime")
