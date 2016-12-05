@@ -4,11 +4,8 @@ library(dplyr)
 library(plotly)
 
 delays<-read.csv("./data/sncf-retards-idf.csv",header=TRUE,stringsAsFactors =TRUE,fileEncoding="latin1")
-names(delays)[4]<-c("Line")
-names(delays)[6]<- c("Punctuality")
-names(delays)[7]<-c("Ontime")
-avgDelay<-delays %>% group_by(Line) %>% summarize(LineAvg=100-mean(Punctuality,na.rm=TRUE))
-avgDelay<-avgDelay %>% mutate(vsTotalAvg=LineAvg-mean(LineAvg))
+names(delays)[4:7]<-c("Line","Name","Punctuality","Ontime")
+avgDelay<-delays %>% group_by(Line,Name) %>% summarize(LineAvg=100-mean(Punctuality,na.rm=TRUE))
 
 header <- dashboardHeader(title = "Train delays in Paris Region Over the Last 3 Years", titleWidth = 600)
 
@@ -21,7 +18,7 @@ body <-  dashboardBody(
 
                 fluidRow(
                     box(
-                     title = "Average Delays For Every Line", 
+                     title = "Average Delays For Every Line",
                      h5("Color Code:"),
                      h5("- Red if Above Average"),
                      h5("- Green if Below Average"),
@@ -32,10 +29,11 @@ body <-  dashboardBody(
                      title = "See Trend Over Time for Selected Line", width = 6, height="auto",solidHeader = TRUE, status = "primary",
                      selectInput("select", label = h5("Choose Line"),
                                   choices = avgDelay$Line),
+                     verbatimTextOutput("value"),
                      plotlyOutput("plot2")
                      ),
                     fluidRow(
-                        box(h5("Source: SNCF Open Data"))
+                        box(h5("Source: SNCF Open Data Accessed on 2016-12-04"))
                     )
 ))
 
